@@ -1,0 +1,456 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+
+<style>
+    input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    #category {
+        display: none;
+    }
+</style>
+
+<div class="col-12">
+    <h4 class="mb-3">Preencha o Formulário</h4>
+    <form class="needs-validation" action="Index">
+        <div class="row g-3">
+            <div class="col-sm-12">
+                <label for="nome" class="form-label">Nome Completo</label>
+                <input type="text" class="form-control" id="nome" placeholder="" value="@ViewBag.nome" required>
+                <div class="invalid-feedback">
+                    Valid first name is required.
+                </div>
+            </div>
+
+            <div class="col-12">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="you@example.com" value="@ViewBag.email" required>
+                <div class="invalid-feedback">
+                    Please enter a valid email address for shipping updates.
+                </div>
+            </div>
+
+            <div class="col-6">
+                <label for="cpf" class="form-label">Cpf</label>
+                <input type="text" class="form-control" name="cpf" id="cpf" placeholder="000.000.000-00" value="@ViewBag.cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" max="14" maxlength="14" onblur="ValidaCPF(this.value)" required>
+            </div>
+
+            <div class="col-6">
+                <label for="fone" class="form-label">Telefone</label>
+                <input type="text" class="form-control telefone" id="fone" maxlength="17" value="@ViewBag.fone" placeholder="(00) 0 0000-0000" required>
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="my-3">
+                    <label for="fone" class="form-label">Habilitação?</label>
+                    <div class="form-check">
+                        <input id="sim" name="paymentMethod" value="sim" type="radio" class="form-check-input" onclick="habilitacao(this);">
+                        <label class="form-check-label" for="credit">Sim</label>
+                    </div>
+                    <div class="form-check">
+                        <input id="nao" name="paymentMethod" value="nao" type="radio" class="form-check-input" onclick="habilitacao(this);">
+                        <label class="form-check-label" for="debit">Não</label>
+                    </div>
+                </div>
+            </div>
+            <div id="category" class="col-6">
+                <label for="categoria" class="form-label">Categoria</label>
+                <input type="text" class="form-control" id="categoria" placeholder="">
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+
+            <div class="col-12">
+                <label for="address2" class="form-label">Lingua Estrangeira</label>
+                <select class="form-control form-control" aria-label="Selecionar ..." required>
+                    <option>Selecionar ...</option>
+                    <option value="1">Inglês</option>
+                    <option value="2">Espanhol</option>
+                    <option value="3">Francês</option>
+                </select>
+            </div>
+
+            <div class="col-6">
+                <label for="cep" class="form-label">Cep</label>
+                <input type="text" class="form-control" id="cep" maxlength="8" onblur="pesquisacep(this.value);" placeholder="" required>
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+
+            <div class="col-2">
+                <label for="estado" class="form-label">Estado</label>
+                <input name="uf" type="text" class="form-control" id="uf" placeholder="" readonly>
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+            <div class="col-4">
+                <label for="bairro" class="form-label">Bairro</label>
+                <input name="bairro" type="text" class="form-control" id="bairro" placeholder="" readonly>
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+
+            <div class="col-4">
+                <label for="cidade" class="form-label">cidade</label>
+                <input name="cidade" type="text" class="form-control" id="cidade" placeholder="" readonly>
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+
+            <div class="col-6">
+                <label for="logradouro" class="form-label">Logradouro</label>
+                <input name="rua" type="text" class="form-control" id="rua" placeholder="" readonly>
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+
+            <div class="col-2">
+                <label for="numero" class="form-label">Numero</label>
+                <input type="text" class="form-control" id="numero" placeholder="" required>
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+
+            <div class="col-12">
+                <label for="complemento" class="form-label">Complemento</label>
+                <input type="text" class="form-control" id="complemento" placeholder="" required>
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+
+            <div class="col-6">
+                <label for="cargo" class="form-label">Cargo</label>
+                <select class="form-control form-control" aria-label="Selecionar ..." required>
+                    <option>Selecionar ...</option>
+                    <option value="1">Auxiliar Administrativo</option>
+                    <option value="2">Serviços Gerais</option>
+                    <option value="3">Porteiro</option>
+                    <option value="4">Recepcionista</option>
+                    <option value="5">Copeira</option>
+                </select>
+            </div>
+
+            <div class="col-6">
+                <label for="salario" class="form-label">Salário Proposto</label>
+                <input type="text" class="form-control" id="valor" placeholder="" maxlength="9" onkeyup="formatarMoeda()" required>
+                <div class="invalid-feedback">
+                    Please enter your shipping address.
+                </div>
+            </div>
+            <br />
+            <div class="col-12">
+                <br />
+                <br />
+                <label for="tbl" class="form-label">Tabela de Horário de Trabalho</label>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Dia da Semana</th>
+                            <th scope="col">Hora Início</th>
+                            <th scope="col">Hora Fim</th>
+                            <th scope="col">Tempo Descanso (h)</th>
+                            <th scope="col">Carga Horária (h)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Segunda</th>
+                            <td><input type="time" class="form-control" id="shi" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="shf" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="shd" placeholder="" onblur="horaSgunda()"></td>
+                            <td><input type="text" class="form-control" id="sch" placeholder="" readonly></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Terça</th>
+                            <td><input type="time" class="form-control" id="thi" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="thf" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="thd" placeholder="" onblur="horaTerca()"></td>
+                            <td><input type="text" class="form-control" id="tch" placeholder="" readonly></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Quarta</th>
+                            <td><input type="time" class="form-control" id="qhi" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="qhf" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="qhd" placeholder="" onblur="horaQuarta()"></td>
+                            <td><input type="text" class="form-control" id="qch" placeholder="" readonly></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Quinta</th>
+                            <td><input type="time" class="form-control" id="qihi" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="qihf" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="qihd" placeholder="" onblur="horaQuinta()"></td>
+                            <td><input type="text" class="form-control" id="qich" placeholder="" readonly></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Sexta</th>
+                            <td><input type="time" class="form-control" id="sxhi" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="sxhf" placeholder=""></td>
+                            <td><input type="time" class="form-control" id="sxhd" placeholder="" onblur="horaSexta()"></td>
+                            <td><input type="text" class="form-control" id="sxch" placeholder="" readonly></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td colspan="3"><b>Carga Horária Semanal</b></td>
+                            <td><input type="text" class="form-control" id="chSem" placeholder="" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+        <br />
+        <button class="w-100 btn btn-primary btn-lg" type="button">
+            Enviar Formulário
+        </button>
+    </form>
+</div>
+
+
+<script>
+
+    window.onload = function () {
+        jQuery("input.telefone")
+            .mask("(99) 9999-9999?9")
+            .focusout(function (event) {
+                var target, phone, element;
+                target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+                phone = target.value.replace(/\D/g, '');
+                element = $(target);
+                element.unmask();
+                if (phone.length > 10) {
+                    element.mask("(99) 99999-999?9");
+                } else {
+                    element.mask("(99) 9999-9999?9");
+                }
+            });
+
+    }
+
+
+    var totalseg = 0
+    var totalter = 0
+    var totalqua = 0
+    var totalqui = 0
+    var totalsex = 0
+
+    function soma() {
+        return parseInt(totalseg, 10) + parseInt(totalter, 10) + parseInt(totalqua, 10) + parseInt(totalqui, 10) + parseInt(totalsex, 10);
+    }
+
+    function horaSgunda() {
+        if (document.getElementById("shi").value != "" && document.getElementById("shf").value != "" && document.getElementById("shd").value != "") {
+            document.getElementById("sch").value = cargaHoraria(document.getElementById("shi").value, document.getElementById("shf").value, document.getElementById("shd").value)
+            totalseg = document.getElementById("sch").value;
+            if (parseInt(totalseg, 10) > 10) {
+                alert("Carga Horária superior a 10 horas");
+            }
+        };
+        document.getElementById("chSem").value = soma();
+    }
+    function horaTerca() {
+        if (document.getElementById("thi").value != "" && document.getElementById("thf").value != "" && document.getElementById("thd").value != "") {
+            document.getElementById("tch").value = cargaHoraria(document.getElementById("thi").value, document.getElementById("thf").value, document.getElementById("thd").value)
+            totalter = document.getElementById("tch").value;
+            if (parseInt(totalter, 10) > 10) {
+                alert("Carga Horária superior a 10 horas");
+            }
+        };
+        document.getElementById("chSem").value = soma();
+    }
+    function horaQuarta() {
+        if (document.getElementById("qhi").value != "" && document.getElementById("qhf").value != "" && document.getElementById("qhd").value != "") {
+            document.getElementById("qch").value = cargaHoraria(document.getElementById("qhi").value, document.getElementById("qhf").value, document.getElementById("qhd").value)
+            totalqua = document.getElementById("qch").value;
+            if (parseInt(totalqua, 10) > 10) {
+                alert("Carga Horária superior a 10 horas");
+            }
+        };
+        document.getElementById("chSem").value = soma();
+    }
+    function horaQuinta() {
+        if (document.getElementById("qihi").value != "" && document.getElementById("qihf").value != "" && document.getElementById("qihd").value != "") {
+            document.getElementById("qich").value = cargaHoraria(document.getElementById("qihi").value, document.getElementById("qihf").value, document.getElementById("qihd").value)
+            totalqui = document.getElementById("qich").value;
+            if (parseInt(totalqui, 10) > 10) {
+                alert("Carga Horária superior a 10 horas");
+            }
+        };
+        document.getElementById("chSem").value = soma();
+    }
+    function horaSexta() {
+        if (document.getElementById("sxhi").value != "" && document.getElementById("sxhf").value != "" && document.getElementById("sxhd").value != "") {
+            document.getElementById("sxch").value = cargaHoraria(document.getElementById("sxhi").value, document.getElementById("sxhf").value, document.getElementById("sxhd").value)
+            totalsex = document.getElementById("sxch").value;
+            if (parseInt(totalsex, 10) > 10) {
+                alert("Carga Horária superior a 10 horas");
+            }
+        };
+        document.getElementById("chSem").value = soma();
+        if (soma() < 20) {
+            alert("Carga Horária menor que 20 horas");
+        } else if (soma() > 40) {
+            alert("Carga Horária maior que 40 horas");
+        }
+    }
+
+
+
+    ///Funcões reaproveitada de outro sistema, e achada na internet em 2020
+    function ValidaCPF(cpf) {
+        var ao_cpf = cpf //document.getElementById("cpf").value;
+        var cpfValido = /^(([0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}))$/;
+        if (cpfValido.test(ao_cpf) == false) {
+
+            ao_cpf = ao_cpf.replace(/\D/g, "");
+
+            if (ao_cpf.length == 11) {
+                ao_cpf = ao_cpf.replace(/(\d{3})(\d)/, "$1.$2");
+                ao_cpf = ao_cpf.replace(/(\d{3})(\d)/, "$1.$2");
+                ao_cpf = ao_cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+                var valorValido = document.getElementById("cpf").value = ao_cpf;
+                document.getElementById("cpf").style.borderColor = "whith";
+                return true;
+            } else {
+                document.getElementById("cpf").style.borderColor = "red";
+                return false;
+            }
+
+        }
+        document.getElementById("cpf").style.borderColor = "whith";
+        return true;
+    }
+    /// função criada
+    function habilitacao(myRadio) {
+        currentValue = myRadio.value;
+        if (currentValue == "sim") {
+            document.getElementById("category").style.display = "block";
+        } else {
+            document.getElementById("category").style.display = "none";
+            document.getElementById("categoria").value = "";
+        }
+
+    }
+
+
+    function formatarMoeda() {
+        var elemento = document.getElementById('valor');
+        var valor = elemento.value;
+
+        valor = valor + '';
+        valor = parseInt(valor.replace(/[\D]+/g, ''));
+        valor = valor + '';
+        valor = valor.replace(/([0-9]{2})$/g, ",$1");
+
+        if (valor.length > 6) {
+            valor = valor.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+        }
+
+        elemento.value = valor;
+        if (valor == 'NaN') elemento.value = '';
+    }
+
+
+    function limpa_formulário_cep() {
+        //Limpa valores do formulário de cep.
+        document.getElementById('rua').value = ("");
+        document.getElementById('bairro').value = ("");
+        document.getElementById('cidade').value = ("");
+        document.getElementById('uf').value = ("");
+        //document.getElementById('ibge').value = ("");
+    }
+
+    function meu_callback(conteudo) {
+        console.log(conteudo);
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value = (conteudo.logradouro);
+            document.getElementById('bairro').value = (conteudo.bairro);
+            document.getElementById('cidade').value = (conteudo.localidade);
+            document.getElementById('uf').value = (conteudo.uf);
+            //document.getElementById('ibge').value = (conteudo.ibge);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if (validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value = "...";
+                document.getElementById('bairro').value = "...";
+                document.getElementById('cidade').value = "...";
+                document.getElementById('uf').value = "...";
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    };
+
+
+
+    function cargaHoraria(horaInicio, HoraFim, horaDesc) {
+        var hi = new Date("01/01/1990 " + horaInicio + "");
+        var hf = new Date("01/01/1990 " + HoraFim + "");
+        var hd = new Date("01/01/1990 " + horaDesc + "");
+        var diffMs = (hf - hi);
+        var diffDays = Math.floor(diffMs / 86400000); // days
+        var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+        var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+        console.log(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes until Christmas =) " + hd.getHours() + "");
+
+        return diffHrs - hd.getHours();
+    }
+
+</script>
