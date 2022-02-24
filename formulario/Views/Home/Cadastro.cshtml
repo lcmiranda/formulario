@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "Cadastro";
+}
+
+@if (ViewBag.cadastrado == true)
+{
+
+    <div class="alert alert-success" role="alert">
+        Formulário deletado com sucesso! 😀
+    </div>
+}
+else if (ViewBag.cadastrado == false)
+{
+    <div class="alert alert-danger" role="alert">
+        Algo deu errado, tente novamente mais tarde. 🙁
+    </div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Cpf</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.listForms)
+        {
+            <tr>
+                <th scope="row">@item.id</th>
+                <td>@item.nome</td>
+                <td>@item.cpf</td>
+                <td>@item.email</td>
+                <td>
+                    <button type="button" class="btn btn-outline-warning  btn-sm"><a href="EditarForm/@item.id">Editar</a></button>
+                    <button type="button" class="btn btn-outline-danger  btn-sm"><a href="DeletarCad/@item.id">Deletar</a></button>
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
